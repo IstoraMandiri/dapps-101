@@ -4,17 +4,14 @@ This guide will take you through the nature, usage and deployment process of a '
 
 Before you get started, please kick off the following instalation process in the background so it's ready by the time we need to use it:
 
-TODO: check if we need anything to compile SOL
-
 ```
 brew tap ethereum/ethereum;
-brew install ethereum;
-```
-or, if you have alredy installed `geth`:
-```
 brew update;
-brew reinstall ethereum;
+brew install ethereum;
+brew install cpp-ethereum;
+brew linkapps cpp-ethereum;
 ```
+if you have alredy installed `geth` use `reinstall` in place of `install`
 
 Optionally, you can install [embark](https://github.com/iurimatias/embark-framework/wiki/Installation), which I'll be using at the end but is not required for a 'hello world' deploy.
 
@@ -218,6 +215,8 @@ client/
     TODO write this file 
 ```
 
+https://github.com/ethereum/go-ethereum/wiki/Contracts-and-Transactions#compiling-a-contract
+
 TODO: add compile + deployment steps
 ```
 set up compiler
@@ -230,7 +229,11 @@ show web3.js file working in browser
 
 Deploying contract is possible but if it is not automated it can be annoying. Enter the frameworks...
 
-Roll your own / Web / Truffle / Embark / Eris
+* Roll your own
+* Web IDE
+* Truffle
+* Embark
+* Eris
 
 Embark assumes you're deploying a web app
 - `embark blockchain` instead of massive command string
@@ -249,6 +252,10 @@ geth --datadir /tmp/embark --logfile /tmp/embark.log --port 30303 --rpc --rpcpor
 As a Meter dev, I took it a step further with `meteor-embark`, which integrates embark transparently into meteor, so it'll automatically manage blockchains and deployments whenever I run `meteor`.
 
 **Cool thing:** Server-side geth client; semi-decentralized mobile deployment?!
+
+### Tools
+
+* AlethZero
 
 ### A Closer look at Dapps
 
@@ -282,3 +289,9 @@ this means you write less to the block-chain resulting in a cheaper dapp. (is th
 A new contract has a new address, and somehow you need to design around that.
 
 Eris' DOUG architecture; structures of smart contracts that implement inter-contract naming and permissions
+
+
+# Further REading
+
+* https://github.com/ethereum/go-ethereum/wiki/Contracts-and-Transactions
+* https://eng.erisindustries.com/tutorials/2015/03/11/solidity-1/

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>My 1st Dapp</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script>
+      $(document).ready(function(){
+        $('.set-value').click(function(){
+          var newValue = prompt("Enter a value")
+          // TODO: make this use set on the smart contract
+          console.log("Setting value...", newValue);
+        });
+        $('.get-value').click(function(){
+          // TODO: make this get the actual value
+          var gottenValue = 'unknown';
+          $('.the-value').text(gottenValue);
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <p>
+      The value is: <span class='the-value'>?</span>
+    </p>
+    <p>
+      <button class='get-value'>Get</button>
+      <button class='set-value'>Set</button>
+    </p>
+  </body>
+</html>

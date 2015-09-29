@@ -41,13 +41,13 @@ sudo apt-get install cpp-ethereum
 
 ## Ethereum in 10 seconds
 
-TBC
+A globally distributed computer with a predictable outcome.
 
 ## What is a Dapp?
 
-❗️ **User Beware - Still in Alpha**
+❗️ **User Beware - Still in Alpha - Here be dragons**
 
-TBC
+Dapps are apps that run on top of ethereum. They make use of *smart contracts* and typically have a frontend UI.
 
 * **Reliable** No central server to go down
 * **Trustless** In theory it's the same way you trust 1 + 1 = 2!
@@ -366,15 +366,17 @@ Cool, it works! See the transactions happening in `geth`.
 Now let's make it interactive!
 
 ```
-Make a button
+Make the buttons work...
 ```
+
+TADA! You now have your first DAPP
 
 ## Frameworks
 
-Now we've deployed a contract, we know it's possible - but if it is not automated it needlessly take up our time. Enter the frameworks...
+Now we've deployed a contract, we know how to do it manually - but if it is not automated it needlessly take up our time. Enter the frameworks...
 
 * Roll your own workflow (with grunt, gulp)
-* Web IDE only (boo!)
+* Web IDE only
 * Truffle
 * Embark
 * Eris
@@ -427,6 +429,7 @@ deposit, withdraw, getNextBlockWithCall, getNextCallKey, getNextCallSibling, get
 
 ### Dapp Design / Best Practices
 
+* Automatic UI?
 * Instead of writing `getLastN()`, just use `get(n)`, and implement the former on the clientside
 this means you write less to the block-chain resulting in a cheaper dapp. (is this even true?)
 * Think about smart contracts like microservices that can be used potentially by many other dapps

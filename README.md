@@ -4,6 +4,20 @@ This guide will take you through the nature, usage and deployment process of a '
 
 Before you get started, please kick off the following instalation process in the background so it's ready by the time we need to use it:
 
+Optionally, you can install [embark](https://github.com/iurimatias/embark-framework/wiki/Installation), which I'll be using at the end but is not required for a 'hello world' deploy.
+
+### Installation Instructions
+
+### OSX
+
+First we need homebrew.
+
+```
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
+
+Then install etheruem tools:
+
 ```
 brew tap ethereum/ethereum;
 brew update;
@@ -11,9 +25,19 @@ brew install ethereum;
 brew install cpp-ethereum;
 brew linkapps cpp-ethereum;
 ```
-if you have alredy installed `geth` use `reinstall` in place of `install`
 
-Optionally, you can install [embark](https://github.com/iurimatias/embark-framework/wiki/Installation), which I'll be using at the end but is not required for a 'hello world' deploy.
+If you have alredy installed `geth` use `reinstall` in place of `install`
+
+### Ubuntu
+
+```
+sudo apt-get install software-properties-common
+sudo add-apt-repository -y ppa:ethereum/ethereum-qt
+sudo add-apt-repository -y ppa:ethereum/ethereum
+sudo apt-get update
+sudo apt-get install ethereum
+sudo apt-get install cpp-ethereum
+```
 
 ## Ethereum in 10 seconds
 

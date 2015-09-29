@@ -172,13 +172,13 @@ More info: https://github.com/ethereum/go-ethereum/wiki/Command-Line-Options
 
 #### Genesis
 
-* [Dev Genesis](https://raw.githubusercontent.com/iurimatias/embark-framework/develop/demo/config/genesis/dev_genesis.json)
-* [MainNet Genesis Blcok]()
+* [Dev Genesis Block](https://raw.githubusercontent.com/iurimatias/embark-framework/develop/demo/config/genesis/dev_genesis.json) - just 0000...
+* [MainNet Genesis Block](http://jev.io/genesis_block.json) - now included in geth?
 
 #### Network ID
 
 * 1 = MainNet
-* 0 = TestNet
+* 0 = Public TestNet
 * n = Private TestNet
 
 Experimenting on the MainNet is too costly, so we we use a testnet on a random networkId during development, which allows us to deploy contracts for free by mining every block.
@@ -221,7 +221,6 @@ $ geth attach
 
 *Demo: Official Wallet Dapp*
 
-
 #### FYI - Connecting to a real network
 
 The `genesis_block.json` is used, it contians pre-mine information and the state of the first block.
@@ -235,6 +234,8 @@ At the moment this can take a real long time, so let's just stick with the testn
 ## Web3.js
 
 An important piece of the puzzle because JS is everywhere; web3.js creates a javascript interface for easily interacting with contracts in Javascript. Now we can interact with smart contract directly from a web interface, including from within a native electron app or on the www, etc.
+
+https://github.com/ethereum/web3.js/tree/master
 
 *Demo: Prettify the ABI file in browser-solidity*
 
@@ -255,11 +256,13 @@ Extra params to allow web apps to use your geth client:
 ### Step 0. Pick your IDE
 
 * Online editors eg. http://meteor-dapp-cosmo.meteor.com/
+* Mix https://github.com/ethereum/wiki/wiki/Mix:-The-DApp-IDE
 * Use a text editor (e.g. atom, sublime text + syntax plugins)
 * Figure out a compile step (deploy via cosmo?)
 
-TODO: create this project
 ### Step 1. Prepare Your Project
+
+Take a look at `/dapp-1`
 
 ```
 contracts/
@@ -268,31 +271,102 @@ client/
   index.html
 ```
 
-https://github.com/ethereum/go-ethereum/wiki/Contracts-and-Transactions#compiling-a-contract
-
 ### Step 2. Compile + Deploy your contracts
+
+https://github.com/ethereum/go-ethereum/wiki/Contracts-and-Transactions#compiling-a-contract
 
 Make sure `geth` is running on a testnet with rcp enabled.
 
 ```
-geth --networkid 1337 --datadir ~/Desktop/testnet  --ipcpath /Users/chris/Library/Ethereum/geth.ipc --rpc --rpcapi eth,web3 --rpcport 8101 --rpcaddr localhost --rpccorsdomain localhost;
+geth --networkid 1337 --genesis dev_genesis.json --datadir ~/Desktop/testnet --ipcpath /Users/chris/Library/Ethereum/geth.ipc --rpc --rpcapi eth,web3 --rpcport 8545 --rpcaddr localhost --rpccorsdomain "*";
 ```
 
+Open the geth console and start a miner
+
 ```
-set up compiler
-show output of ABI file
-deploy contract in geth
-show web3.js file working in browser
+geth attach;
+miner.start(1);
 ```
+
+Paste in the contract source code (solidity)
+
+```
+source = "contract SimpleStorage { uint public storedData; function SimpleStorage(uint initialValue) { storedData = initialValue; } function set(uint x) { storedData = x; } function get() constant returns (uint retVal) {  return storedData; } }";
+```
+
+Compile it in `geth`, deploy by sending a transaction to it
+
+```
+miner.start(1)
+personal.unlockAccount(eth.accounts[0]);
+contract = eth.compile.solidity(source).SimpleStorage;
+SimpleStorageContract = eth.contract(contract.info.abiDefinition);
+SimpleStorage = SimpleStorageContract.new(42, {from: eth.accounts[0], data:contract.code, gas: 2000000}, function(e,c){
+  if(c.address){
+    console.log("Mined Contract", c.address);
+  }
+});
+
+SimpleStorage.set.sendTransaction(3, {from: eth.accounts[0]})
+```
+
+Note that you can set `eth.defaultAccount = eth.accounts[0]` to automatically set the `from` field:
+
+```
+SimpleStorage.set(5);
+```
+
+Done!
 
 ### Step 3. Deploy your UI
 
-This is the fun part.
+Add web3.js to project (index.html)
+
+```html
+<script>
+  web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
+</script>
+```
+
+Play with chrome console
 
 ```
-add generated web3.js to project
-play with console
-create a button
+web3.fromWei(web3.eth.getBalance(web3.eth.coinbase), "ether").toNumber()
+```
+
+Add the contracts ABIs
+
+Get the ABI from geth:
+
+```
+> JSON.stringify(contract.info.abiDefinition)
+```
+
+Paste into the chrome console, replace contract address with actual contract address.
+
+```
+web3.eth.defaultAccount = web3.eth.accounts[0];
+myAbi = JSON.parse("[{\"constant\":true,\"inputs\":[],\"name\":\"storedData\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"x\",\"type\":\"uint256\"}],\"name\":\"set\",\"outputs\":[],\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"get\",\"outputs\":[{\"name\":\"retVal\",\"type\":\"uint256\"}],\"type\":\"function\"},{\"inputs\":[{\"name\":\"initialValue\",\"type\":\"uint256\"}],\"type\":\"constructor\"}]");
+SimpleStorageContract = web3.eth.contract(myAbi);
+SimpleStorage = SimpleStorageContract.at("0xc05e8b3549857274024a96e38e7aa2e9499f2c6d");
+```
+
+Note: You can, also deploy contracts with `new`, just like in `geth`.
+
+Play with the console; let's get and set the contract with just deployed.
+
+```
+SimpleStorage.get();
+SimpleStorage.set(2);
+SimpleStorage.get();
+```
+
+Cool, it works! See the transactions happening in `geth`.
+
+Now let's make it interactive!
+
+```
+Make a button
 ```
 
 ## Frameworks

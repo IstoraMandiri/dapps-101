@@ -283,22 +283,26 @@ geth --networkid 1337 --genesis dev_genesis.json --datadir ~/Desktop/testnet --i
 
 Open the geth console and start a miner
 
-```
+```javascript
 geth attach;
-miner.start(1);
+miner.start(3); // 3 CPUs
 ```
 
 Paste in the contract source code (solidity)
 
+```javascript
+source = "contract SimpleStorage { uint public storedData; function SimpleStorage(uint initialValue) { storedData = initialValue; } function set(uint x) { storedData = x; } function get() constant returns (uint retVal) { return storedData; } }";
 ```
-source = "contract SimpleStorage { uint public storedData; function SimpleStorage(uint initialValue) { storedData = initialValue; } function set(uint x) { storedData = x; } function get() constant returns (uint retVal) {  return storedData; } }";
+
+Unlock your account
+
+```javascript
+personal.unlockAccount(eth.accounts[0]);
 ```
 
 Compile it in `geth`, deploy by sending a transaction to it
 
-```
-miner.start(1)
-personal.unlockAccount(eth.accounts[0]);
+```javascript
 contract = eth.compile.solidity(source).SimpleStorage;
 SimpleStorageContract = eth.contract(contract.info.abiDefinition);
 SimpleStorage = SimpleStorageContract.new(42, {from: eth.accounts[0], data:contract.code, gas: 2000000}, function(e,c){
@@ -306,13 +310,17 @@ SimpleStorage = SimpleStorageContract.new(42, {from: eth.accounts[0], data:contr
     console.log("Mined Contract", c.address);
   }
 });
+```
 
+Wait for the message. If you don't see one make sure you're mining.
+
+```javascript
 SimpleStorage.set.sendTransaction(3, {from: eth.accounts[0]})
 ```
 
-Note that you can set `eth.defaultAccount = eth.accounts[0]` to automatically set the `from` field:
+Note that you can set `eth.defaultAccount = eth.accounts[0]` to automatically set the `from` field, so you can use:
 
-```
+```javascript
 SimpleStorage.set(5);
 ```
 
@@ -323,6 +331,7 @@ Done!
 Add web3.js to project (index.html)
 
 ```html
+<!-- index.html -->
 <script>
   web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
 </script>
@@ -330,24 +339,33 @@ Add web3.js to project (index.html)
 
 Play with chrome console
 
-```
+```javascript
+// in chrome
 web3.fromWei(web3.eth.getBalance(web3.eth.coinbase), "ether").toNumber()
 ```
 
-Add the contracts ABIs
+Set your default account
 
-Get the ABI from geth:
-
+```javascript
+// in chrome
+web3.eth.defaultAccount = web3.eth.accounts[0];
 ```
+
+Add the contracts ABIs. Get the ABI from `geth`:
+
+```javascript
+// inside `geth` client
 > JSON.stringify(contract.info.abiDefinition)
 ```
 
-Paste into the chrome console, replace contract address with actual contract address.
+Paste result into the chrome console, replace contract address with actual contract address.
 
-```
-web3.eth.defaultAccount = web3.eth.accounts[0];
+```javascript
+// inside chrome
 myAbi = JSON.parse("[{\"constant\":true,\"inputs\":[],\"name\":\"storedData\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"x\",\"type\":\"uint256\"}],\"name\":\"set\",\"outputs\":[],\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"get\",\"outputs\":[{\"name\":\"retVal\",\"type\":\"uint256\"}],\"type\":\"function\"},{\"inputs\":[{\"name\":\"initialValue\",\"type\":\"uint256\"}],\"type\":\"constructor\"}]");
+
 SimpleStorageContract = web3.eth.contract(myAbi);
+
 SimpleStorage = SimpleStorageContract.at("0xc05e8b3549857274024a96e38e7aa2e9499f2c6d");
 ```
 
@@ -361,7 +379,9 @@ SimpleStorage.set(2);
 SimpleStorage.get();
 ```
 
-Cool, it works! See the transactions happening in `geth`.
+Cool, it works! Transfer the above code into the .html file.
+
+See the transactions happening in `geth`.
 
 Now let's make it interactive!
 

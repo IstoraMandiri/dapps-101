@@ -45,7 +45,7 @@ TBC
 
 ## What is a Dapp?
 
-⚠️ **User Beware - Still in Alpha**
+❗️ **User Beware - Still in Alpha**
 
 TBC
 
@@ -89,22 +89,41 @@ Mist Wallet Technology:
    * Transaction (tx) data
    * In the future, SWARM / IPFS
 
-#### Data Types
+#### Solidity Featues
 
-* Usual susects
-* Address
+**Objects**
 
-#### Common Patterns
+* Contracts
+* Structs (custom types)
+* Functions
+* Library (contract less context)
+* Inheritence
 
+**Types**
+
+* Bools
+* Usual Operators
+* Bytes
+* Ints
+* Strings
+* Arrays
+* Addresses
+* Implicit Conversions
+
+**Concepts**
+
+* Mortals
 * Suicides
+* Ownership
+* [Kill](https://github.com/ethereum/wiki/wiki/Solidity-Tutorial#contract-inheritance)
+* Balance
 * Automatic `get` creation
 
-#### Smart Contract Examples
+**Exmaples**
 
-* [solidity] SimpleStorage
-* [solidity] Lotto
-* [solidity] Alarm
-* [serpent] Some other example
+* [SimpleStorage.sol](https://github.com/iurimatias/embark-framework/blob/develop/demo/app/contracts/simple_storage.sol)
+* [FixedFeeRegistrar.sol](https://github.com/ethereum/dapp-bin/blob/master/registrar/FixedFeeRegistrar.sol)
+* [Crowdfund.se](https://github.com/ethereum/serpent/blob/master/examples/crowdfund.se)
 
 ### B. User Interface
 
@@ -124,27 +143,23 @@ It's up to you:
 
 Install a client
 
-* eth - c++ 
-* geth - Go
+* [eth](https://github.com/ethereum/cpp-ethereum) - c++  `brew install ethereum-cpp`
+* [geth](https://github.com/ethereum/go-ethereum) - Go `brew install ethereum`
 
-Let’s take a look at `geth` with the following config options:
 
-```
+Let’s take a look at `geth` and it's basic config options:
+
+```bash
 geth
 
 --networkid [random id or 1 for mainnet]
 --genesis genesis_block.json
 
---datadir ~/Desktop/testnet
+--datadir ~/Desktop/testnet # use a different one for each env
 --logfile ~/Desktop/testnet.log
 
+# so the mist wallet works
 --ipcpath /Users/chris/Library/Ethereum/geth.ipc
-
---rpc
---rpcapi eth,web3
---rpcport 8101
---rpcaddr localhost
---rpccorsdomain *
 
 --mine
 --minerthreads 1
@@ -153,21 +168,31 @@ geth
 --unlock 9d4485d66959481f77c82b3bea26b197cc17d5e6
 ```
 
-http://ether.fund/tools/
+More info: https://github.com/ethereum/go-ethereum/wiki/Command-Line-Options
 
-Not too expensive in production, but for experimenting it’s a bit too costly. So we we use a testate on a random networkId during development, which allows us to deploy contracts for free by mining every block.
+#### Genesis
 
+* [Dev Genesis](https://raw.githubusercontent.com/iurimatias/embark-framework/develop/demo/config/genesis/dev_genesis.json)
+* [MainNet Genesis Blcok]()
+
+#### Network ID
+
+* 1 = MainNet
+* 0 = TestNet
+* n = Private TestNet
+
+Experimenting on the MainNet is too costly, so we we use a testnet on a random networkId during development, which allows us to deploy contracts for free by mining every block.
 
 ## Set up your account on a testnet
 
 If this is your first time you'll want to create an account with a password that will hold your testnet ether, and can be used to make transactions with contracts.
 
 ```
-# first start up the node
-geth --networkid 1337 --datadir ~/Desktop/testnet --ipcpath /Users/chris/Library/Ethereum/geth.ipc
+# createa a data dir
+mkdir ~/Desktop/testnet;
 
-# delete the old users
-rm /Users/chris/Library/Ethereum/keystore/*
+# start up the node
+geth --networkid 1337 --genesis dev_genesis.json --datadir ~/Desktop/testnet  --ipcpath /Users/chris/Library/Ethereum/geth.ipc;
 
 # lets set up or account
 $ geth attach
@@ -181,6 +206,7 @@ $ geth attach
 
 # take note of the accouont name
 # set and check the coinbase
+> personal.listAccounts
 > web3.miner.setEtherbase(web3.eth.accounts[0])
 > web3.eth.coinbase
 
@@ -196,7 +222,9 @@ $ geth attach
 *Demo: Official Wallet Dapp*
 
 
-#### Connecting to the real network
+#### FYI - Connecting to a real network
+
+The `genesis_block.json` is used, it contians pre-mine information and the state of the first block.
 
 ```
 geth --genesis ~/git/ether/genesis_block.json --datadir ~/Desktop/mainnet
@@ -210,7 +238,7 @@ An important piece of the puzzle because JS is everywhere; web3.js creates a jav
 
 *Demo: Prettify the ABI file in browser-solidity*
 
-Extra params to allow web apps to use your geth client
+Extra params to allow web apps to use your geth client:
 
 ```
 --rpc
@@ -222,26 +250,34 @@ Extra params to allow web apps to use your geth client
 
 ❗️**Danger: make sure you configure `rpccorsdomain` properly.** 
 
-## Let's deploy our own Smart Contracts
+## Let's deploy a 'hello world' Dapp
 
-Pick your IDE
+### Step 0. Pick your IDE
 
- - online editors
- - https://chriseth.github.io/browser-solidity/
- - Install a text editor (e.g. atom, sublime text)
+* Online editors eg. http://meteor-dapp-cosmo.meteor.com/
+* Use a text editor (e.g. atom, sublime text + syntax plugins)
+* Figure out a compile step (deploy via cosmo?)
 
 TODO: create this project
+### Step 1. Prepare Your Project
+
 ```
 contracts/
   SimpleChat.sol
 client/
   index.html
-    TODO write this file 
 ```
 
 https://github.com/ethereum/go-ethereum/wiki/Contracts-and-Transactions#compiling-a-contract
 
-TODO: add compile + deployment steps
+### Step 2. Compile + Deploy your contracts
+
+Make sure `geth` is running on a testnet with rcp enabled.
+
+```
+geth --networkid 1337 --datadir ~/Desktop/testnet  --ipcpath /Users/chris/Library/Ethereum/geth.ipc --rpc --rpcapi eth,web3 --rpcport 8101 --rpcaddr localhost --rpccorsdomain localhost;
+```
+
 ```
 set up compiler
 show output of ABI file
@@ -249,26 +285,39 @@ deploy contract in geth
 show web3.js file working in browser
 ```
 
+### Step 3. Deploy your UI
+
+This is the fun part.
+
+```
+add generated web3.js to project
+play with console
+create a button
+```
+
 ## Frameworks
 
-Deploying contract is possible but if it is not automated it can be annoying. Enter the frameworks...
+Now we've deployed a contract, we know it's possible - but if it is not automated it needlessly take up our time. Enter the frameworks...
 
-* Roll your own
-* Web IDE
+* Roll your own workflow (with grunt, gulp)
+* Web IDE only (boo!)
 * Truffle
 * Embark
 * Eris
 
-Embark assumes you're deploying a web app
-- `embark blockchain` instead of massive command string
-- `embark deploy` instead of manual deploying (it redeploys all contracts at once)
-- Can be configured for auto file watching
-- Compiles Sol/Serpent into Web3.js ABIs
-- Mining Script
+*Embark* assumes you're deploying a web app. Let's see what embark does.
 
-```
-(embark command)
-geth --datadir /tmp/embark --logfile /tmp/embark.log --port 30303 --rpc --rpcport 8101 --rpcaddr localhost --networkid 10252 --rpccorsdomain * --minerthreads 1 --mine --genesis config/genesis.json --rpcapi eth,web3 --maxpeers 4 --password config/password --unlock 9d4485d66959481f77c82b3bea26b197cc17d5e6 
+* Automatically sets up accounts
+* `embark blockchain` instead of massive command string
+* `embark deploy` instead of manual deploying (it redeploys all contracts at once)
+* Can be configured for auto file watching
+* Compiles Sol/Serpent into Web3.js ABIs
+* Includes a 'Smart' Mining Script
+
+Embark `embark blockhain` command:
+
+```bash
+geth --datadir /tmp/embark --logfile /tmp/embark.log --port 30303 --rpc --rpcport 8101 --rpcaddr localhost --networkid 10252 --rpccorsdomain * --minerthreads 1 --mine --genesis config/genesis.json --rpcapi eth,web3 --maxpeers 4 --password config/password --unlock xxx
 ```
 
 ### Meteor Embark
@@ -277,7 +326,7 @@ As a Meter dev, I took it a step further with `meteor-embark`, which integrates 
 
 **Cool thing:** Server-side geth client; semi-decentralized mobile deployment?!
 
-### Tools
+### Noteworthy Tools
 
 * AlethZero
 

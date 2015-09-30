@@ -2,9 +2,7 @@
 
 This guide will take you through the nature, usage and deployment process of a 'hello world' ethereum dapp.
 
-Before you get started, please kick off the following instalation process in the background so it's ready by the time we need to use it:
-
-Optionally, you can install [embark](https://github.com/iurimatias/embark-framework/wiki/Installation), which I'll be using at the end but is not required for a 'hello world' deploy.
+Before you get started, please kick off the following installation process in the background so it's ready by the time we need to use it:
 
 ### Installation Instructions
 
@@ -28,6 +26,7 @@ brew linkapps cpp-ethereum;
 
 If you have alredy installed `geth` use `reinstall` in place of `install`
 
+
 ### Ubuntu
 
 ```
@@ -39,23 +38,32 @@ sudo apt-get install ethereum
 sudo apt-get install cpp-ethereum
 ```
 
+---
+
+The [Wallet Dapp](https://github.com/ethereum/meteor-dapp-wallet) is also recommended to try out.
+
+Optionally, you can also install [Embark](https://github.com/iurimatias/embark-framework/wiki/Installation) and [Meteor](http://github.com/meteor/meteor), which I'll be using at the end but is not required for a 'hello world' deploy.
+
 ## Ethereum in 10 seconds
 
-A globally distributed computer with a predictable outcome.
+A globally distributed virtual machine with a virtually perfectly reliable outcome.
+
+Basically, it's a technology that lets us create apps with super powers.
 
 ## What is a Dapp?
 
-❗️ **User Beware - Still in Alpha - Here be dragons**
+❗️ **User Beware - Still in Alpha - [Here be dragons](https://en.wikipedia.org/wiki/Here_be_dragons)**
 
-Dapps are apps that run on top of ethereum. They make use of *smart contracts* and typically have a frontend UI.
+Dapps are apps that run on top of an ethereum blockchain. They make use of *smart contracts* and typically have a frontend UI for allowing users to interact with a particular set of smart contracts.
 
-* **Reliable** No central server to go down
-* **Trustless** In theory it's the same way you trust 1 + 1 = 2!
-* **Uncensorable** Legal questions ip, privacy, censorship, updating, etc.
-* **Cost** There is an intrinsic tie to the efficiency of the code and the cost of running the contract, so having well-designed contracts is super important in the long run.
+They can do all the things that normal apps can do, plus:
 
+* **Ultra Reliable** No central server to go down; only goes down if you go down
+* **Trustless** In theory it's the same way you trust '1 + 1 = 2'
+* **Uncensorable** Legal questions like ip, privacy, censorship, updating, etc.
+* **Cost** There is an intrinsic tie to the efficiency of the code and the cost of running the contract, so having well-designed contracts is super important in the long run. Optimising the code of very popular or specialized smart contracts will surely be a profitable profession in the near future.
 
-> **[Gas Prices](http://ether.fund/tool/gas-fees)**  
+> **[Current Gas Prices](http://ether.fund/tool/gas-fees)**
 > Deploy original wallet: 1,230,162 gas = 12.3 ether = 1.44 USD  
 > Deploy wallet stub: 184,280 = 1.8 ether = 0.21 USD  
 > Simple Wallet transaction: 64,280 = 0.64 ether = 0.08 USD  
@@ -425,6 +433,7 @@ As a Meter dev, I took it a step further with `meteor-embark`, which integrates 
 ### Noteworthy Tools
 
 * AlethZero
+* Mix
 
 ### A Closer look at Dapps
 

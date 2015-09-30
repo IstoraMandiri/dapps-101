@@ -474,3 +474,7 @@ Eris' DOUG architecture; structures of smart contracts that implement inter-cont
 
 * https://github.com/ethereum/go-ethereum/wiki/Contracts-and-Transactions
 * https://eng.erisindustries.com/tutorials/2015/03/11/solidity-1/
+
+---
+
+https://github.com/ethereum/homebrew-ethereum/issues/38
